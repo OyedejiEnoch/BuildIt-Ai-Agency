@@ -3,14 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { motion } from "motion/react";
-import { ArrowUpRight, Search, ShoppingBag, User, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { ArrowUpRight, Search, ShoppingBag, User, Menu, X, Plus, Minus, Github, Twitter, Instagram, Linkedin, Mail, Globe } from "lucide-react";
+import { useState, ReactNode } from "react";
 
 export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-x-hidden">
       {/* Navigation */}
-      <nav className="flex items-center justify-between px-6 py-8 max-w-7xl mx-auto">
+      <nav className="flex items-center justify-between px-6 py-8 max-w-7xl mx-auto relative z-50">
         <div className="text-2xl font-display font-bold tracking-tighter">
           BuildIt<span className="text-orange-500">AI</span>
         </div>
@@ -22,20 +25,46 @@ export default function App() {
           <a href="#" className="text-sm font-medium text-white/60 hover:text-white transition-colors">Portfolio</a>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+        <div className="flex items-center gap-2 md:gap-4">
+          <button className="p-2 hover:bg-white/10 rounded-full transition-colors hidden sm:block">
             <Search size={20} />
           </button>
-          <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <button className="p-2 hover:bg-white/10 rounded-full transition-colors hidden sm:block">
             <ShoppingBag size={20} />
           </button>
           <button className="p-2 bg-orange-500 rounded-full transition-colors">
             <User size={20} />
           </button>
-          <button className="md:hidden p-2 hover:bg-white/10 rounded-full transition-colors">
-            <Menu size={20} />
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 hover:bg-white/10 rounded-full transition-colors z-50"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-0 left-0 w-full h-screen bg-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 md:hidden"
+            >
+              <a href="#" onClick={() => setIsMenuOpen(false)} className="text-4xl font-display font-bold hover:text-orange-500 transition-colors">Home</a>
+              <a href="#" onClick={() => setIsMenuOpen(false)} className="text-4xl font-display font-bold text-white/60 hover:text-white transition-colors">Services</a>
+              <a href="#" onClick={() => setIsMenuOpen(false)} className="text-4xl font-display font-bold text-white/60 hover:text-white transition-colors">Process</a>
+              <a href="#" onClick={() => setIsMenuOpen(false)} className="text-4xl font-display font-bold text-white/60 hover:text-white transition-colors">Portfolio</a>
+              
+              <div className="flex gap-6 mt-8">
+                <SocialLink icon={<Twitter size={24} />} href="#" />
+                <SocialLink icon={<Github size={24} />} href="#" />
+                <SocialLink icon={<Linkedin size={24} />} href="#" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
@@ -46,7 +75,7 @@ export default function App() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-[12vw] md:text-[14vw] font-display font-bold leading-[0.85] tracking-tighter text-white uppercase"
+            className="text-[12vw] sm:text-[10vw] md:text-[12vw] lg:text-[14vw] font-display font-bold leading-[0.85] tracking-tighter text-white uppercase"
           >
             The New <br />
             <span className="flex items-center gap-4">
@@ -60,7 +89,7 @@ export default function App() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="absolute top-[15%] right-0 md:right-[10%] max-w-[300px] bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-2xl z-10"
+            className="relative md:absolute mt-8 md:mt-0 md:top-[15%] right-0 md:right-[10%] max-w-full md:max-w-[300px] bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-2xl z-10"
           >
             <p className="text-sm md:text-base leading-relaxed text-white/90">
               We leverage cutting-edge neural networks to craft digital experiences that aren't just seen, but felt.
@@ -77,50 +106,36 @@ export default function App() {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="md:col-span-8 relative group overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-white/5 h-[400px] md:h-[500px]"
           >
-            {/* Neural Grid Background */}
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-500/20 via-transparent to-transparent"></div>
-              <div className="h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-            </div>
+            <img 
+              src="https://picsum.photos/seed/neural-network/1200/800" 
+              alt="Neural Network Visualization" 
+              className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
             
-            {/* Floating Particles */}
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{
-                  y: [Math.random() * 500, Math.random() * 500],
-                  x: [Math.random() * 800, Math.random() * 800],
-                  opacity: [0.2, 0.5, 0.2]
-                }}
-                transition={{
-                  duration: 10 + Math.random() * 20,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                className="absolute w-1 h-1 bg-orange-500/40 rounded-full blur-[1px]"
-              />
-            ))}
-
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-50 group-hover:opacity-70 transition-opacity"></div>
-            
-            <div className="absolute top-8 left-8 flex items-center gap-3 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <div className="absolute top-8 left-8 flex items-center gap-3 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 z-10">
               <div className="flex -space-x-2">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-zinc-800 flex items-center justify-center text-[10px] font-bold">
-                    AI
-                  </div>
+                  <img 
+                    key={i} 
+                    src={`https://picsum.photos/seed/${i + 50}/100/100`} 
+                    alt="User Avatar" 
+                    className="w-8 h-8 rounded-full border-2 border-black object-cover"
+                    referrerPolicy="no-referrer"
+                  />
                 ))}
               </div>
               <span className="text-xs font-medium uppercase tracking-widest">Trusted by 500+ Innovators</span>
             </div>
 
             <div className="absolute bottom-8 left-8 right-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div className="max-w-md">
+              <div className="max-w-md relative z-10">
                 <h3 className="text-3xl font-display font-bold mb-2">Autonomous Design Systems</h3>
                 <p className="text-white/60 text-sm">Our proprietary AI engines generate unique, high-conversion layouts in seconds, tailored to your brand's DNA.</p>
               </div>
               
-              <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all group/btn">
+              <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all group/btn relative z-10">
                 <span>Start Project</span>
                 <div className="bg-white text-orange-500 rounded-full p-1 group-hover/btn:rotate-45 transition-transform">
                   <ArrowUpRight size={18} />
@@ -135,16 +150,22 @@ export default function App() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
-              className="flex-1 bg-zinc-900/50 border border-white/5 rounded-[2rem] p-8 flex flex-col justify-between hover:bg-zinc-900 transition-colors"
+              className="flex-1 relative group overflow-hidden bg-zinc-900/50 border border-white/5 rounded-[2rem] p-8 flex flex-col justify-between hover:bg-zinc-900 transition-colors"
             >
-              <div>
+              <img 
+                src="https://picsum.photos/seed/data-viz/600/400" 
+                alt="Data Visualization" 
+                className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-opacity duration-500"
+                referrerPolicy="no-referrer"
+              />
+              <div className="relative z-10">
                 <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center mb-6">
                   <div className="w-4 h-4 rounded-full bg-orange-500 animate-pulse"></div>
                 </div>
                 <h4 className="text-xl font-bold mb-2">Neural Optimization</h4>
                 <p className="text-sm text-white/50">Real-time performance tuning based on user behavior patterns.</p>
               </div>
-              <div className="flex justify-between items-end mt-8">
+              <div className="flex justify-between items-end mt-8 relative z-10">
                 <span className="text-2xl font-display font-bold">99.9%</span>
                 <span className="text-[10px] uppercase tracking-widest text-white/40">Efficiency</span>
               </div>
@@ -154,9 +175,15 @@ export default function App() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.0, duration: 0.8 }}
-              className="flex-1 bg-zinc-900/50 border border-white/5 rounded-[2rem] p-8 flex flex-col justify-between hover:bg-zinc-900 transition-colors"
+              className="flex-1 relative group overflow-hidden bg-zinc-900/50 border border-white/5 rounded-[2rem] p-8 flex flex-col justify-between hover:bg-zinc-900 transition-colors"
             >
-              <div>
+              <img 
+                src="https://picsum.photos/seed/generative-art/600/400" 
+                alt="Generative Art" 
+                className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-opacity duration-500"
+                referrerPolicy="no-referrer"
+              />
+              <div className="relative z-10">
                 <div className="flex gap-2 mb-6">
                   <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
                   <div className="w-3 h-3 rounded-full bg-orange-500"></div>
@@ -165,7 +192,7 @@ export default function App() {
                 <h4 className="text-xl font-bold mb-2">Generative Assets</h4>
                 <p className="text-sm text-white/50">Custom icons, illustrations, and imagery generated on-the-fly.</p>
               </div>
-              <div className="flex justify-between items-end mt-8">
+              <div className="flex justify-between items-end mt-8 relative z-10">
                 <span className="text-2xl font-display font-bold">24/7</span>
                 <span className="text-[10px] uppercase tracking-widest text-white/40">Generation</span>
               </div>
@@ -211,14 +238,14 @@ export default function App() {
       <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
       {/* Ecosystem Section */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-24 md:py-32 overflow-hidden">
         {/* Subtle Background Gradients */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-orange-500/5 rounded-full blur-[80px] md:blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-1/4 right-0 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-blue-500/5 rounded-full blur-[60px] md:blur-[100px] pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative">
           {/* Floating Elements Container */}
-          <div className="relative h-[600px] flex flex-col items-center justify-center">
+          <div className="relative h-auto md:min-h-[600px] flex flex-col items-center justify-center py-12 md:py-0">
             
             {/* Central Content */}
             <motion.div 
@@ -231,13 +258,13 @@ export default function App() {
                 For the visionaries <br />
                 <span className="text-white/40">who build the future</span>
               </h2>
-              <p className="text-white/60 text-lg leading-relaxed">
+              <p className="text-white/60 text-base md:text-lg leading-relaxed">
                 BuildIt AI integrates seamlessly into your workflow, handling the complexity of design while you focus on the vision. Our neural ecosystem learns your brand's essence and evolves with every interaction.
               </p>
             </motion.div>
 
             {/* Floating Modules - Inspired by Image 1 & 2 */}
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="hidden md:block absolute inset-0 pointer-events-none">
               {/* Module 1: Conversion Optimization */}
               <motion.div 
                 animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
@@ -1446,28 +1473,28 @@ export default function App() {
               author: "Marcus Chen",
               role: "CTO at Flux",
               gradient: "from-orange-500/10",
-              avatar: "MC"
+              avatar: "https://picsum.photos/seed/marcus/100/100"
             },
             {
               quote: "The autonomous performance tuning is a game changer. Our conversion rates spiked by 40% within the first week of deployment. It's like the site is alive.",
               author: "Sarah Jenkins",
               role: "Founder of Bloom",
               gradient: "from-blue-500/10",
-              avatar: "SJ"
+              avatar: "https://picsum.photos/seed/sarah/100/100"
             },
             {
               quote: "Generative assets that actually feel human. BuildIt AI is the first agency that truly understands the delicate balance between machine precision and human creativity.",
               author: "Elena Rodriguez",
               role: "Creative Director at Nexus",
               gradient: "from-emerald-500/10",
-              avatar: "ER"
+              avatar: "https://picsum.photos/seed/elena/100/100"
             },
             {
               quote: "Seamless integration and unprecedented speed. Our entire digital ecosystem now feels evolved. The future of design isn't just coming; it's already here with BuildIt.",
               author: "David Park",
               role: "Head of Product at Zenith",
               gradient: "from-purple-500/10",
-              avatar: "DP"
+              avatar: "https://picsum.photos/seed/david/100/100"
             }
           ].map((testimonial, i) => (
             <motion.div
@@ -1492,8 +1519,13 @@ export default function App() {
                 </p>
 
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-display font-bold text-xs text-white/40 group-hover:border-orange-500/50 group-hover:text-white transition-all">
-                    {testimonial.avatar}
+                  <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden group-hover:border-orange-500/50 transition-all">
+                    <img 
+                      src={testimonial.avatar} 
+                      alt={testimonial.author} 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
                   </div>
                   <div>
                     <div className="font-bold text-white">{testimonial.author}</div>
@@ -1506,187 +1538,226 @@ export default function App() {
         </div>
       </section>
 
-      {/* Final Divider */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
       {/* FAQ Section */}
-      <section className="max-w-4xl mx-auto px-6 py-32">
-        <div className="text-center mb-24">
-          <motion.span 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-[0.2em] font-medium text-white/60 mb-6"
-          >
-            Intelligence Base
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-display font-bold tracking-tight mb-6"
-          >
-            Frequently Asked <br />
-            <span className="text-white/40">Neural Questions</span>
-          </motion.h2>
-        </div>
-
-        <div className="space-y-4">
-          {[
-            {
-              q: "How does the neural design process actually work?",
-              a: "Our process begins by ingesting your brand's DNA—colors, typography, and values. Our neural engine then generates thousands of variations, which are refined by our human designers to ensure they meet our elite standards for both aesthetics and conversion."
-            },
-            {
-              q: "Do I own the rights to the AI-generated assets?",
-              a: "Absolutely. Once a design is finalized and delivered, you own 100% of the intellectual property rights. We simply provide the neural horsepower to create them faster and more effectively."
-            },
-            {
-              q: "How fast can I expect my first design concept?",
-              a: "Speed is our core advantage. Most initial concepts are delivered within 24-48 hours. Our autonomous prototyping allows us to explore creative directions in minutes that would take traditional agencies weeks."
-            },
-            {
-              q: "Can BuildIt AI integrate with my existing design team?",
-              a: "Yes. We often act as a 'neural extension' for internal teams, handling the heavy lifting of asset generation and performance tuning so your designers can focus on high-level creative strategy."
-            },
-            {
-              q: "What happens if I'm not satisfied with a neural output?",
-              a: "We offer unlimited revisions. Our AI learns from your feedback, meaning every iteration gets closer to your perfect vision. The more we collaborate, the smarter the neural engine becomes for your brand."
-            }
-          ].map((faq, i) => (
-            <motion.div
-              key={i}
+      <section className="max-w-7xl mx-auto px-6 py-24 md:py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16">
+          <div className="lg:col-span-5">
+            <motion.span 
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="group"
+              className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-[0.2em] font-medium text-white/60 mb-6"
             >
-              <details className="bg-zinc-900/30 border border-white/5 rounded-3xl overflow-hidden transition-all duration-300 open:bg-zinc-900/80 open:border-white/10">
-                <summary className="flex items-center justify-between p-8 cursor-pointer list-none">
-                  <h3 className="text-lg md:text-xl font-bold pr-8">{faq.q}</h3>
-                  <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-open:rotate-180 transition-transform duration-300">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                  </div>
-                </summary>
-                <div className="px-8 pb-8">
-                  <p className="text-white/50 leading-relaxed max-w-2xl">
-                    {faq.a}
-                  </p>
-                </div>
-              </details>
-            </motion.div>
-          ))}
+              Support
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-6xl font-display font-bold tracking-tight mb-8"
+            >
+              Neural <br />
+              <span className="text-white/40">Knowledge Base</span>
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-white/60 mb-12 max-w-md"
+            >
+              Common queries about our neural design ecosystem and how we transform digital visions into reality.
+            </motion.p>
+            
+            {/* Creative Visual for FAQ */}
+            <div className="relative w-full aspect-square md:aspect-auto md:h-[400px] bg-zinc-900/50 border border-white/5 rounded-[2.5rem] overflow-hidden flex items-center justify-center group">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent"></div>
+              <motion.div 
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, 0]
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                className="w-32 h-32 md:w-48 md:h-48 border border-white/10 rounded-full flex items-center justify-center relative"
+              >
+                <div className="absolute inset-0 border border-white/5 rounded-full scale-125 animate-pulse"></div>
+                <div className="w-24 h-24 md:w-32 md:h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
+                <Search size={32} className="md:size-48 text-orange-500/40 group-hover:text-orange-500 transition-colors duration-500" />
+              </motion.div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 space-y-4">
+            <FAQItem 
+              question="How does the neural design process differ from traditional agencies?"
+              answer="Traditional agencies rely on manual iteration and subjective feedback. Our neural process ingests your brand DNA and uses generative models to explore thousands of high-fidelity concepts in parallel, optimizing for conversion benchmarks before a human designer even touches the canvas."
+            />
+            <FAQItem 
+              question="Can I integrate BuildIt AI into my existing design workflow?"
+              answer="Absolutely. We offer seamless integration with Figma, Adobe Creative Cloud, and various CMS platforms. Our neural assets are exported in standard formats, and our autonomous deployment engine can sync directly with your Git repositories."
+            />
+            <FAQItem 
+              question="What kind of performance gains can I expect?"
+              answer="On average, our partners see a 40-60% increase in page load speeds and a 25-35% boost in conversion rates. This is achieved through real-time asset optimization and predictive layout adjustments that adapt to user behavior."
+            />
+            <FAQItem 
+              question="Is the AI-generated content unique to my brand?"
+              answer="Yes. We train custom, isolated models for each of our Enterprise partners. Your brand's aesthetic, voice, and data are never shared or used to train public models, ensuring 100% uniqueness and IP security."
+            />
+            <FAQItem 
+              question="How long does a typical neural deployment take?"
+              answer="While traditional agencies take months, our neural Lite plan can deliver a fully optimized landing page in 48-72 hours. Larger ecosystem migrations typically take 2-4 weeks depending on the complexity of the brand DNA mapping."
+            />
+          </div>
         </div>
       </section>
 
-      {/* Final Divider */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
       {/* Footer Section */}
-      <footer className="relative pt-32 pb-12 overflow-hidden">
-        {/* Background Glow */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-6 relative">
-          {/* Massive CTA */}
-          <div className="text-center mb-32">
-            <motion.h2 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="text-[15vw] font-display font-bold leading-none tracking-tighter text-white uppercase mb-12"
-            >
-              Ready to <br />
-              <span className="text-white/20">Evolve?</span>
-            </motion.h2>
-            
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative inline-flex items-center gap-4 bg-white text-black px-12 py-6 rounded-full font-bold text-xl transition-all overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-orange-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-              <span className="relative z-10 group-hover:text-white transition-colors">Start Your Neural Journey</span>
-              <ArrowUpRight size={24} className="relative z-10 group-hover:text-white transition-colors group-hover:rotate-45 transition-transform" />
-            </motion.button>
-          </div>
-
-          {/* Footer Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-24 border-t border-white/10 pt-24">
-            <div className="col-span-2">
-              <div className="text-2xl font-display font-bold tracking-tighter mb-6">
+      <footer className="relative bg-zinc-950 pt-24 md:pt-32 pb-12 overflow-hidden">
+        {/* Background Accent */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-t from-orange-500/5 to-transparent pointer-events-none"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 md:gap-16 mb-24">
+            {/* Brand Column */}
+            <div className="lg:col-span-5 space-y-8">
+              <div className="text-3xl font-display font-bold tracking-tighter">
                 BuildIt<span className="text-orange-500">AI</span>
               </div>
-              <p className="text-white/40 text-sm leading-relaxed max-w-xs mb-8">
-                The world's first neural-first design agency. We bridge the gap between human creativity and machine intelligence.
+              <p className="text-white/50 max-w-sm leading-relaxed">
+                The world's first neural design agency. We bridge the gap between human creativity and machine intelligence to build the future of the web.
               </p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span className="text-[10px] uppercase tracking-widest font-bold text-white/60">Neural Systems: Operational</span>
+              <div className="flex items-center gap-4">
+                <SocialLink icon={<Twitter size={18} />} href="#" />
+                <SocialLink icon={<Github size={18} />} href="#" />
+                <SocialLink icon={<Linkedin size={18} />} href="#" />
+                <SocialLink icon={<Instagram size={18} />} href="#" />
               </div>
             </div>
 
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-6">Platform</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Services</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Process</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Portfolio</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Pricing</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-6">Company</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white transition-colors">Contact</a></li>
-              </ul>
-            </div>
-
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-6">Stay Connected</h4>
-              <div className="flex gap-4 mb-8">
-                {['Twitter', 'LinkedIn', 'Instagram', 'Dribbble'].map((social) => (
-                  <a 
-                    key={social} 
-                    href="#" 
-                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all"
-                  >
-                    <span className="sr-only">{social}</span>
-                    <div className="w-1.5 h-1.5 bg-current rounded-full"></div>
-                  </a>
-                ))}
+            {/* Links Columns */}
+            <div className="grid grid-cols-2 lg:col-span-4 gap-8">
+              <div className="space-y-6">
+                <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white">Ecosystem</h4>
+                <ul className="space-y-4">
+                  <li><FooterLink href="#">Neural UI</FooterLink></li>
+                  <li><FooterLink href="#">Generative Assets</FooterLink></li>
+                  <li><FooterLink href="#">Autonomous Dev</FooterLink></li>
+                  <li><FooterLink href="#">Brand Mapping</FooterLink></li>
+                </ul>
               </div>
-              <div className="bg-white/5 border border-white/10 p-1 rounded-full flex items-center">
+
+              <div className="space-y-6">
+                <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white">Agency</h4>
+                <ul className="space-y-4">
+                  <li><FooterLink href="#">Our Story</FooterLink></li>
+                  <li><FooterLink href="#">Process</FooterLink></li>
+                  <li><FooterLink href="#">Pricing</FooterLink></li>
+                  <li><FooterLink href="#">Careers</FooterLink></li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Newsletter Column */}
+            <div className="lg:col-span-3 space-y-6">
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white">Neural Insights</h4>
+              <p className="text-xs text-white/40 leading-relaxed">
+                Subscribe to receive weekly updates on neural aesthetics and AI design trends.
+              </p>
+              <div className="relative group">
                 <input 
                   type="email" 
-                  placeholder="Neural Updates" 
-                  className="bg-transparent border-none outline-none px-4 py-2 text-sm flex-1 text-white placeholder:text-white/20"
+                  placeholder="Email address" 
+                  className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-sm focus:outline-none focus:border-orange-500/50 transition-colors group-hover:bg-white/10"
                 />
-                <button className="bg-white text-black px-6 py-2 rounded-full text-xs font-bold hover:bg-orange-500 hover:text-white transition-colors">
-                  Join
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors">
+                  <ArrowUpRight size={14} />
                 </button>
               </div>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-white/5 pt-12">
-            <div className="text-[10px] uppercase tracking-widest text-white/20 font-bold">
-              © 2026 BUILDIT AI DESIGN COLLECTIVE. ALL RIGHTS RESERVED.
+          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-6 text-[10px] uppercase tracking-widest font-bold text-white/30">
+              <span>© 2024 BuildIt AI Agency</span>
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             </div>
-            <div className="flex gap-8">
-              <a href="#" className="text-[10px] uppercase tracking-widest text-white/20 font-bold hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="text-[10px] uppercase tracking-widest text-white/20 font-bold hover:text-white transition-colors">Terms of Service</a>
+
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">All Systems Operational</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                <Globe size={12} className="text-white/40" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Global Edge Network</span>
+              </div>
             </div>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+function FAQItem({ question, answer }: { question: string, answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={`bg-zinc-900/50 border ${isOpen ? 'border-orange-500/30' : 'border-white/5'} rounded-3xl overflow-hidden transition-colors duration-500`}
+    >
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full p-6 md:p-8 flex items-center justify-between text-left group"
+      >
+        <span className={`text-base md:text-lg font-bold transition-colors ${isOpen ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
+          {question}
+        </span>
+        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 ${isOpen ? 'bg-orange-500 rotate-45' : 'bg-white/5 group-hover:bg-white/10'}`}>
+          <Plus size={18} className={isOpen ? 'text-white' : 'text-white/40'} />
+        </div>
+      </button>
+      
+      <motion.div
+        initial={false}
+        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="overflow-hidden"
+      >
+        <div className="px-6 md:px-8 pb-6 md:pb-8 text-white/50 text-sm leading-relaxed max-w-2xl">
+          {answer}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SocialLink({ icon, href }: { icon: ReactNode, href: string }) {
+  return (
+    <a 
+      href={href} 
+      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-orange-500 hover:border-orange-500 transition-all duration-300"
+    >
+      {icon}
+    </a>
+  );
+}
+
+function FooterLink({ children, href }: { children: ReactNode, href: string }) {
+  return (
+    <a 
+      href={href} 
+      className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group"
+    >
+      <div className="w-1 h-1 rounded-full bg-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      {children}
+    </a>
   );
 }
